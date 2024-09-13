@@ -1,0 +1,25 @@
+<section id="cocas">
+  <video src="cocas.mp4" muted playsinline ></video>
+</section>
+<style>
+  video {
+    width: 100%;
+    height: auto;
+    z-index: 10;
+  }
+</style>
+<script>
+  let video = document.querySelector('video') as HTMLVideoElement;
+  let cocas = document.getElementById('cocas') as HTMLElement;
+
+  const cocasPosition = cocas.getBoundingClientRect().top;
+  const scrollPosition = window.scrollY;
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > cocasPosition) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  });
+</script>

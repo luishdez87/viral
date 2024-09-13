@@ -1,0 +1,72 @@
+<div id="bubbles"></div>
+<script>
+  import * as THREE from 'three';
+  let w = window.innerWidth;
+  let h = window.innerHeight;
+
+  const bubblesContainer = document.getElementById('bubbles') as HTMLDivElement;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 20;
+  scene.add(camera);
+
+  const renderer = new THREE.WebGLRenderer({ alpha: true });
+  renderer.setSize(w, h);
+
+  bubblesContainer.appendChild(renderer.domElement);
+  
+  const bubbles: any[] = [];
+
+  const loader = new THREE.TextureLoader();
+
+  loader.crossOrigin = '';
+
+  loader.load('/bubble.svg', (texture) => {
+    const bubbleGeo = new THREE.PlaneGeometry(1, 1);
+    const bubbleMaterial = new THREE.MeshBasicMaterial({
+      map: texture,
+      transparent: true,
+    });
+
+    const NUM_PARTICLES = 1000;
+
+    for (let i = 0; i < NUM_PARTICLES; i++) {
+      const bubble = new THREE.Mesh(bubbleGeo, bubbleMaterial);
+      bubble.position.set(
+        Math.random() * 100 - 50,
+        Math.random() * 100 - 50,
+        Math.random() * 100 - 50
+      );
+      // bubble.rotation.z = Math.random() * 360;
+      // bubble.rotation.y = Math.random() * 360;
+      // bubble.rotation.x = Math.random() * 360;
+      bubble.scale.setScalar(Math.random() * 2);
+      bubbles.push(bubble);
+      scene.add(bubble);
+    }
+  })
+
+  function animate() {
+    requestAnimationFrame(animate);
+    bubbles.forEach(bubble => {
+      // bubble.rotation.z += 0.001;
+      // bubble.rotation.y += 0.001;
+      // bubble.rotation.x += 0.001;
+      bubble.position.y += 0.1;
+      if (bubble.position.y > 50) {
+        bubble.position.y = -50;
+      }
+    });
+    renderer.render(scene, camera);
+  }
+
+  animate();
+</script>
+<style>
+  #bubbles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1000;
+  }
+</style>

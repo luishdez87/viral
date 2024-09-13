@@ -1,0 +1,50 @@
+<div id="lata" class="fog"></div>
+<script>
+  import * as THREE from 'three';
+  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+  let w = window.innerWidth;
+  let h = window.innerHeight;
+
+  const lataContainer = document.getElementById('lata') as HTMLDivElement;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.z = 10;
+  scene.add(camera);
+
+  const renderer = new THREE.WebGLRenderer({ alpha: true });
+  renderer.setSize(w * .75, h * .75);
+  lataContainer.appendChild(renderer.domElement);
+
+  const light = new THREE.AmbientLight(0xffffff, 14);
+  scene.add(light);
+  const controls = new OrbitControls(camera, renderer.domElement);
+
+  controls.update();
+
+
+  const dracoLoader = new DRACOLoader();
+  dracoLoader.setDecoderPath('../node_modules/three/examples/jsm/libs/draco/');
+  const loader = new GLTFLoader();
+
+  loader.setDRACOLoader(dracoLoader);
+  loader.load('/coke.glb', (gltf) => {
+    scene.add(gltf.scene);
+  });
+
+function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+}
+
+animate();
+</script>
+<style>
+  #lata {
+    position: absolute;
+    right: 0%;
+    z-index: 0;
+  }
+</style>
